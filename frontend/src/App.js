@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import MovieCard from './components/MovieCard';
 import MovieDetail from './components/MovieDetail'; // We'll create this next
 import './App.css';
@@ -33,18 +34,19 @@ function MovieList() {
 // 2. Update the main App component
 function App() {
   return (
-    <Router>
-      <div className="app">
-        <h1>IMDb Clone</h1>
-        <Routes>
-          {/* Home route - shows movie grid */}
-          <Route path="/" element={<MovieList />} />
-          
-          {/* Movie details route */}
-          <Route path="/movies/:id" element={<MovieDetail />} />
-        </Routes>
-      </div>
-    </Router>
+    <AuthProvider><Router>
+    <div className="app">
+      <h1>IMDb Clone</h1>
+      <Routes>
+        {/* Home route - shows movie grid */}
+        <Route path="/" element={<MovieList />} />
+        
+        {/* Movie details route */}
+        <Route path="/movies/:id" element={<MovieDetail />} />
+      </Routes>
+    </div>
+  </Router></AuthProvider>
+    
   );
 }
 

@@ -143,24 +143,89 @@ app.get('/movies/:id/reviews', async (req, res) => {
 
 // Submit a new review
 app.post('/movies/:id/reviews', async (req, res) => {
+  console.log('Review submission body:', req.body); // Add this
   try {
     const { userId, rating, content } = req.body;
+    
+    console.log('Received review data:', { userId, rating, content }); // Add this
     
     if (!userId || !rating) {
       return res.status(400).json({ error: 'User ID and rating are required' });
     }
 
-    await pool.query(
+    const [result] = await pool.query(
       'INSERT INTO review (movie_id, user_id, rating, review_content) VALUES (?, ?, ?, ?)',
       [req.params.id, userId, rating, content]
     );
 
-    res.status(201).json({ message: 'Review submitted successfully' });
+    console.log('Database insertion result:', result); // Add this
+    res.status(201).json({ 
+      message: 'Review submitted successfully',
+      reviewId: result.insertId 
+    });
+  } catch (err) {
+    console.error('Error submitting review:', err); // Enhanced logging
+    res.status(500).json({ 
+      error: 'Failed to submit review',
+      details: err.message 
+    });
+  }
+});
+
+app.post('/api/signup', async (req, res) => {
+  const { email, password, username } = req.body;
+  
+  try {
+    // 1. Check if email exists
+    const [users] = await pool.query('SELECT * FROM user WHERE email = ?', [email]);
+    if (users.length > 0) {
+      return res.status(400).json({ error: 'Email already exists' });
+    }
+
+    // 2. Hash password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // 3. Insert user
+    await pool.query(
+      'INSERT INTO user (email, password_hash, username, role) VALUES (?, ?, ?, "user")',
+      [email, hashedPassword, username]
+    );
+
+    res.status(201).json({ message: 'User created successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+app.get('/api/movies/search', async (req, res) => {
+  const { q, genre, minRating } = req.query;
+  
+  let query = `SELECT * FROM movie WHERE 1=1`;
+  const params = [];
+
+  if (q) {
+    query += ` AND movie_name LIKE ?`;
+    params.push(`%${q}%`);
+  }
+  
+  if (genre) {
+    query += ` AND movie_id IN (SELECT movie_id FROM movie_genre WHERE genre = ?)`;
+    params.push(genre);
+  }
+
+  if (minRating) {
+    query += ` AND imdb_score >= ?`;
+    params.push(minRating);
+  }
+
+  try {
+    const [movies] = await pool.query(query, params);
+    res.json(movies);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

@@ -1,0 +1,96 @@
+.review-section {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  .review-section h2 {
+    color: #032541;
+    margin-bottom: 1.5rem;
+  }
+  
+  .reviews-list {
+    margin-bottom: 2rem;
+  }
+  
+  .review-card {
+    background: white;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .review-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .reviewer {
+    font-weight: bold;
+    color: #032541;
+  }
+  
+  .rating {
+    color: #01b4e4;
+    font-weight: bold;
+  }
+  
+  .date {
+    color: #666;
+    margin-left: auto;
+  }
+  
+  .review-content {
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  .review-form {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .review-form h3 {
+    margin-top: 0;
+    color: #032541;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+  }
+  
+  .review-form button {
+    background: #01b4e4;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .review-form button:hover {
+    background: #032541;
+  }

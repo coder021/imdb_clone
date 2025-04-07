@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import './MovieDetail.css';
+import ReviewSection from './ReviewSection';
 
 const MovieDetail = () => {
   const { id } = useParams();
@@ -117,6 +118,7 @@ const MovieDetail = () => {
           </div>
         </div>
       </div>
+      <ReviewSection movieId={id} />
     </div>
   );
 };

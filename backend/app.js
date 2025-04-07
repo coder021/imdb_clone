@@ -124,6 +124,44 @@ app.get('/movies/:id', async (req, res) => {
   }
 });
 
+// Get reviews for a movie
+app.get('/movies/:id/reviews', async (req, res) => {
+  try {
+    const [reviews] = await pool.query(`
+      SELECT r.*, u.username 
+      FROM review r
+      JOIN user u ON r.user_id = u.user_id
+      WHERE r.movie_id = ?
+      ORDER BY r.review_date DESC
+    `, [req.params.id]);
+    
+    res.json(reviews);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Submit a new review
+app.post('/movies/:id/reviews', async (req, res) => {
+  try {
+    const { userId, rating, content } = req.body;
+    
+    if (!userId || !rating) {
+      return res.status(400).json({ error: 'User ID and rating are required' });
+    }
+
+    await pool.query(
+      'INSERT INTO review (movie_id, user_id, rating, review_content) VALUES (?, ?, ?, ?)',
+      [req.params.id, userId, rating, content]
+    );
+
+    res.status(201).json({ message: 'Review submitted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
